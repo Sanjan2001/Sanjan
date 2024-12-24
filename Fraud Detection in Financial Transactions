@@ -1,0 +1,73 @@
+import weka.core.Instances;
+import weka.core.converters.CSVLoader;
+import weka.classifiers.Classifier;
+import weka.classifiers.trees.RandomForest;
+import weka.classifiers.evaluation.Evaluation;
+import weka.core.Attribute;
+import weka.core.DenseInstance;
+
+import java.io.File;
+import java.util.ArrayList;
+
+public class FraudDetection {
+
+    public static void main(String[] args) throws Exception {
+        // Load the dataset from CSV
+        CSVLoader loader = new CSVLoader();
+        loader.setSource(new File("creditcard.csv"));  // Specify the path to your dataset
+        Instances data = loader.getDataSet();
+        
+        // Step 1: Preprocessing
+        // We want to predict the 'Class' (fraud or not fraud), so we set it as the class index.
+        data.setClassIndex(data.numAttributes() - 1);
+        
+        // Step 2: Split the data (Optional: In practice, you'd split into training and testing sets)
+        // For simplicity, we will use the entire dataset to train the model.
+        
+        // Step 3: Build the model using Random Forest (you can use other classifiers as well)
+        RandomForest model = new RandomForest();
+        model.buildClassifier(data);
+        
+        // Step 4: Evaluate the model
+        Evaluation evaluation = new Evaluation(data);
+        evaluation.crossValidateModel(model, data, 10, new java.util.Random(1));  // 10-fold cross-validation
+        
+        // Step 5: Print the evaluation results
+        System.out.println(evaluation.toSummaryString("\nEvaluation Results\n====================\n", false));
+        
+        // Step 6: Make predictions (Example: Predicting a new transaction)
+        // For this, let's create an example transaction and predict if it's fraud or not.
+
+        // Example transaction (dummy data)
+        double time = 0.3;  // Example time of transaction
+        double v1 = 0.1;    // Example feature value for V1
+        double v2 = -0.1;   // Example feature value for V2
+        double amount = 50.0; // Example transaction amount
+        int classLabel = 0;   // Placeholder, to be predicted by the model
+        
+        // Step 7: Prepare the instance for prediction
+        ArrayList<Attribute> attributes = new ArrayList<>();
+        for (int i = 0; i < data.numAttributes() - 1; i++) {
+            attributes.add(new Attribute("V" + (i + 1)));
+        }
+        attributes.add(new Attribute("Amount"));
+        attributes.add(new Attribute("Class"));  // Target attribute, will be predicted
+        
+        Instances newData = new Instances("TestInstances", attributes, 1);
+        newData.setClassIndex(newData.numAttributes() - 1);  // The class attribute is 'Class'
+        
+        // Create a new instance for prediction (no class value for prediction)
+        DenseInstance newInstance = new DenseInstance(30); // Example with 29 features and 1 class label
+        newInstance.setValue(attributes.get(0), v1);
+        newInstance.setValue(attributes.get(1), v2);
+        // Set other features (V3, V4, ..., V28) if needed (for simplicity, we'll use dummy data)
+        newInstance.setValue(attributes.get(28), amount);
+        newInstance.setValue(attributes.get(29), classLabel); // Set to '0' initially
+        
+        newData.add(newInstance);
+
+        // Step 8: Predict if the transaction is fraudulent (1) or not (0)
+        double prediction = model.classifyInstance(newInstance);
+        System.out.println("Predicted Class: " + (prediction == 1.0 ? "Fraud" : "Not Fraud"));
+    }
+}
