@@ -1,0 +1,66 @@
+import weka.classifiers.Classifier;
+import weka.classifiers.functions.Logistic;
+import weka.core.Attribute;
+import weka.core.DenseInstance;
+import weka.core.Instances;
+import weka.core.converters.ConverterUtils.DataSource;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+
+public class LoanPrediction {
+
+    public static void main(String[] args) throws Exception {
+        // Load the dataset
+        String datasetPath = "loan_data.arff"; // ARFF file containing the loan dataset
+        Instances data = loadDataset(datasetPath);
+
+        // Set the class index (target variable) for classification
+        data.setClassIndex(data.numAttributes() - 1);
+
+        // Train the model (Logistic Regression)
+        Classifier classifier = new Logistic();
+        classifier.buildClassifier(data);
+
+        // Test with a new instance (simulate a loan application)
+        double[] newLoanData = {4000, 1, 0, 1, 0, 1, 1}; // Example values (replace with real data)
+        String prediction = predictLoanApproval(classifier, data, newLoanData);
+
+        // Output the result
+        System.out.println("Loan Approval Prediction: " + prediction);
+    }
+
+    // Load the dataset from ARFF file
+    private static Instances loadDataset(String filePath) throws Exception {
+        DataSource source = new DataSource(filePath);
+        return source.getDataSet();
+    }
+
+    // Predict loan approval for a new applicant
+    private static String predictLoanApproval(Classifier classifier, Instances data, double[] newLoanData) throws Exception {
+        // Create a new instance with the same structure as the training data
+        Instances newData = new Instances(data, 0);
+        Attribute income = new Attribute("Income");
+        Attribute creditScore = new Attribute("CreditScore");
+        Attribute loanAmount = new Attribute("LoanAmount");
+        // Add other attributes as needed...
+        
+        ArrayList<Attribute> attributes = new ArrayList<>();
+        attributes.add(income);
+        attributes.add(creditScore);
+        attributes.add(loanAmount);
+        // Add other attributes to the list...
+
+        // Create a new instance with loan data
+        DenseInstance instance = new DenseInstance(attributes.size());
+        for (int i = 0; i < newLoanData.length; i++) {
+            instance.setValue(attributes.get(i), newLoanData[i]);
+        }
+
+        // Predict the class (loan approval)
+        double result = classifier.classifyInstance(instance);
+        String prediction = (result == 0) ? "Denied" : "Approved"; // Assuming 0 = Denied, 1 = Approved
+        return prediction;
+    }
+}
