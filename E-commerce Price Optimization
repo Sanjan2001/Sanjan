@@ -1,0 +1,78 @@
+import weka.core.Instances;
+import weka.core.converters.CSVLoader;
+import weka.classifiers.Evaluation;
+import weka.classifiers.functions.LinearRegression;
+import weka.core.Attribute;
+import weka.core.DenseInstance;
+
+import java.io.File;
+import java.util.ArrayList;
+
+public class PriceOptimization {
+
+    public static void main(String[] args) throws Exception {
+        // Step 1: Load the dataset (CSV file)
+        CSVLoader loader = new CSVLoader();
+        loader.setSource(new File("sales_data.csv"));
+        Instances data = loader.getDataSet();
+
+        // Step 2: Preprocess the data
+        // In this case, we want to predict the SalesVolume, so we set it as the class index.
+        data.setClassIndex(data.numAttributes() - 2); // Predicting SalesVolume based on Price, CompetitorPrice, Discount, and Seasonality
+
+        // Step 3: Build a regression model (Linear Regression)
+        LinearRegression model = new LinearRegression();
+        model.buildClassifier(data);
+
+        // Step 4: Evaluate the model using cross-validation (e.g., 10-fold cross-validation)
+        Evaluation evaluation = new Evaluation(data);
+        evaluation.crossValidateModel(model, data, 10, new java.util.Random(1));
+
+        // Step 5: Print evaluation results (mean absolute error, root mean squared error, etc.)
+        System.out.println(evaluation.toSummaryString("\nEvaluation Results\n====================\n", false));
+
+        // Step 6: Optimize Pricing (Predict sales volume for a new price)
+        // Example: Predicting sales volume for a new product with specific attributes
+        double price = 130.0;         // New price for optimization
+        double competitorPrice = 125.0; // Competitor price
+        double discount = 10.0;        // Discount applied
+        double seasonality = 1.0;      // Low seasonality
+
+        // Step 7: Create a new instance with the new product features
+        ArrayList<Attribute> attributes = new ArrayList<>();
+        attributes.add(new Attribute("Price"));
+        attributes.add(new Attribute("CompetitorPrice"));
+        attributes.add(new Attribute("Discount"));
+        attributes.add(new Attribute("Seasonality"));
+        attributes.add(new Attribute("SalesVolume")); // Class attribute (to be predicted)
+
+        // Create an empty dataset with the same attributes
+        Instances newData = new Instances("TestInstances", attributes, 1);
+        newData.setClassIndex(newData.numAttributes() - 1);  // The class attribute is 'SalesVolume'
+
+        // Create a new instance for prediction
+        DenseInstance newInstance = new DenseInstance(5);
+        newInstance.setValue(attributes.get(0), price);
+        newInstance.setValue(attributes.get(1), competitorPrice);
+        newInstance.setValue(attributes.get(2), discount);
+        newInstance.setValue(attributes.get(3), seasonality);
+        newInstance.setValue(attributes.get(4), 0);  // Placeholder for SalesVolume
+
+        // Add the new instance to the dataset
+        newData.add(newInstance);
+
+        // Step 8: Predict the sales volume for the new price
+        double predictedSalesVolume = model.classifyInstance(newInstance);
+        System.out.println("Predicted Sales Volume for the price " + price + ": " + predictedSalesVolume);
+
+        // Step 9: Price Optimization Logic
+        // To optimize the price, you can experiment with different prices and choose the one that maximizes the predicted sales volume.
+        // For simplicity, we can print the predicted sales volume for different prices and select the best one.
+        double[] testPrices = {110, 120, 130, 140, 150};
+        for (double testPrice : testPrices) {
+            newInstance.setValue(attributes.get(0), testPrice);
+            predictedSalesVolume = model.classifyInstance(newInstance);
+            System.out.println("Predicted Sales Volume for price " + testPrice + ": " + predictedSalesVolume);
+        }
+    }
+}
