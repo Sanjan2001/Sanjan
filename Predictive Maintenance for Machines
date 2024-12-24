@@ -1,0 +1,47 @@
+import weka.core.Instances;
+import weka.core.converters.ArffLoader;
+import weka.classifiers.trees.RandomForest;
+import weka.classifiers.Classifier;
+import weka.classifiers.Evaluation;
+import weka.core.Instance;
+import weka.core.SerializationHelper;
+
+import java.io.File;
+import java.io.IOException;
+
+public class PredictiveMaintenance {
+
+    public static void main(String[] args) throws Exception {
+        // Load the dataset (ARFF format)
+        ArffLoader loader = new ArffLoader();
+        loader.setFile(new File("machine_data.arff"));
+        Instances data = loader.getDataSet();
+
+        // Set the last column (failure) as the class index (target variable)
+        data.setClassIndex(data.numAttributes() - 1);
+
+        // Split the dataset into training and testing (80% training, 20% testing)
+        int trainSize = (int) Math.round(data.numInstances() * 0.8);
+        int testSize = data.numInstances() - trainSize;
+        Instances trainData = new Instances(data, 0, trainSize);
+        Instances testData = new Instances(data, trainSize, testSize);
+
+        // Build a Random Forest model
+        RandomForest model = new RandomForest();
+        model.buildClassifier(trainData);
+
+        // Evaluate the model using the test set
+        Evaluation evaluation = new Evaluation(trainData);
+        evaluation.evaluateModel(model, testData);
+        System.out.println("Evaluation Results: ");
+        System.out.println(evaluation.toSummaryString());
+
+        // Optionally, save the trained model for future use
+        SerializationHelper.write("predictive_maintenance_model.model", model);
+
+        // Make a prediction for a new instance (a machine reading)
+        Instance newInstance = testData.instance(0); // Take the first instance from the test data
+        double prediction = model.classifyInstance(newInstance);
+        System.out.println("Predicted failure for instance: " + prediction); // 0 = Normal, 1 = Failure
+    }
+}
