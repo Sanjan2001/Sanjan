@@ -1,0 +1,60 @@
+import weka.core.Instances;
+import weka.core.Instance;
+import weka.core.DenseInstance;
+import weka.core.Attribute;
+import weka.classifiers.Classifier;
+import weka.classifiers.trees.J48;
+import weka.core.converters.CSVLoader;
+
+import java.io.File;
+import java.util.ArrayList;
+
+public class HealthcareAI {
+    public static void main(String[] args) throws Exception {
+        // Load dataset from CSV file
+        CSVLoader loader = new CSVLoader();
+        loader.setSource(new File("patients.csv"));
+        Instances data = loader.getDataSet();
+
+        // Setting the class index to the last attribute (hasDisease)
+        data.setClassIndex(data.numAttributes() - 1);
+
+        // Build a classifier (decision tree using J48)
+        Classifier classifier = new J48();
+        classifier.buildClassifier(data);
+
+        // Test data (example of a new patient)
+        double age = 55;
+        double bloodPressure = 130;
+        double cholesterol = 210;
+
+        // Create a new instance of patient data
+        ArrayList<Attribute> attributes = new ArrayList<>();
+        attributes.add(new Attribute("age"));
+        attributes.add(new Attribute("bloodPressure"));
+        attributes.add(new Attribute("cholesterol"));
+
+        // Add class label (binary outcome: 0 or 1)
+        ArrayList<String> classValues = new ArrayList<>();
+        classValues.add("0"); // No disease
+        classValues.add("1"); // Has disease
+        Attribute classAttribute = new Attribute("hasDisease", classValues);
+        attributes.add(classAttribute);
+
+        // Create a new instance (patient) based on the above attributes
+        Instances patientData = new Instances("TestInstances", attributes, 1);
+        patientData.setClassIndex(patientData.numAttributes() - 1);
+
+        Instance newPatient = new DenseInstance(4);  // 4 attributes
+        newPatient.setValue(attributes.get(0), age);
+        newPatient.setValue(attributes.get(1), bloodPressure);
+        newPatient.setValue(attributes.get(2), cholesterol);
+        newPatient.setValue(attributes.get(3), "0"); // default disease (will be predicted)
+
+        patientData.add(newPatient);
+
+        // Predict if the patient has the disease
+        double prediction = classifier.classifyInstance(newPatient);
+        System.out.println("Prediction: " + (prediction == 1.0 ? "Has Disease" : "No Disease"));
+    }
+}
