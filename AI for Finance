@@ -1,0 +1,69 @@
+import weka.core.Instances;
+import weka.core.Instance;
+import weka.core.DenseInstance;
+import weka.core.Attribute;
+import weka.classifiers.Classifier;
+import weka.classifiers.trees.J48;
+import weka.core.converters.CSVLoader;
+
+import java.io.File;
+import java.util.ArrayList;
+
+public class FinanceAI {
+    public static void main(String[] args) throws Exception {
+        // Step 1: Load the financial data (stocks.csv)
+        CSVLoader loader = new CSVLoader();
+        loader.setSource(new File("stocks.csv"));
+        Instances data = loader.getDataSet();
+        
+        // Step 2: Set the class attribute (PriceMovement) as the last column
+        data.setClassIndex(data.numAttributes() - 1);
+
+        // Step 3: Build a classifier (Decision Tree - J48)
+        Classifier classifier = new J48();  // J48 is an implementation of the C4.5 decision tree
+        classifier.buildClassifier(data);
+
+        // Step 4: Predict for a new stock instance (new data point)
+        // New data (for example, stock indicators for a new day)
+        double open = 131.00;
+        double high = 132.00;
+        double low = 130.50;
+        double close = 131.50;
+        double volume = 1100000;
+
+        // Step 5: Create new instance (representing a new stock day)
+        ArrayList<Attribute> attributes = new ArrayList<>();
+        attributes.add(new Attribute("Open"));
+        attributes.add(new Attribute("High"));
+        attributes.add(new Attribute("Low"));
+        attributes.add(new Attribute("Close"));
+        attributes.add(new Attribute("Volume"));
+
+        // Add class attribute (PriceMovement - whether the price will go up or down)
+        ArrayList<String> classValues = new ArrayList<>();
+        classValues.add("0"); // Price goes down
+        classValues.add("1"); // Price goes up
+        Attribute classAttribute = new Attribute("PriceMovement", classValues);
+        attributes.add(classAttribute);
+
+        // Create a new instance with the values for a new day
+        Instances newDayData = new Instances("TestInstances", attributes, 1);
+        newDayData.setClassIndex(newDayData.numAttributes() - 1);
+
+        // Create the new stock instance
+        Instance newStockDay = new DenseInstance(6);  // 5 attributes + 1 class label
+        newStockDay.setValue(attributes.get(0), open);
+        newStockDay.setValue(attributes.get(1), high);
+        newStockDay.setValue(attributes.get(2), low);
+        newStockDay.setValue(attributes.get(3), close);
+        newStockDay.setValue(attributes.get(4), volume);
+        newStockDay.setValue(attributes.get(5), "0"); // Default, will be overridden by prediction
+
+        // Add the instance to the dataset
+        newDayData.add(newStockDay);
+
+        // Step 6: Classify the new instance to predict Price Movement (Up or Down)
+        double prediction = classifier.classifyInstance(newStockDay);
+        System.out.println("Prediction: " + (prediction == 1.0 ? "Price will go UP" : "Price will go DOWN"));
+    }
+}
