@@ -1,0 +1,65 @@
+import weka.core.Instances;
+import weka.core.converters.ArffLoader;
+import weka.classifiers.Classifier;
+import weka.classifiers.functions.Logistic;
+import weka.classifiers.Evaluation;
+import weka.classifiers.trees.J48; // For decision tree model (optional)
+import weka.core.Instance;
+import weka.core.Attribute;
+
+import java.io.File;
+import java.util.Random;
+
+public class IrisFlowerClassification {
+
+    public static void main(String[] args) throws Exception {
+
+        // Step 1: Load the Iris dataset
+        // Load the Iris dataset from an ARFF file (Weka format)
+        ArffLoader loader = new ArffLoader();
+        loader.setSource(new File("iris.arff")); // Make sure you have the correct path to the file
+        Instances data = loader.getDataSet();
+
+        // Step 2: Set the class index (the attribute we want to predict)
+        // The class index is the last attribute (the species of the flower)
+        data.setClassIndex(data.numAttributes() - 1);
+
+        // Step 3: Build the machine learning model (Logistic Regression in this case)
+        // Logistic Regression Model (You can also use other classifiers like J48 or RandomForest)
+        Classifier model = new Logistic();
+
+        // Step 4: Train the model with the Iris dataset
+        model.buildClassifier(data);
+
+        // Step 5: Evaluate the model using cross-validation
+        Evaluation evaluation = new Evaluation(data);
+        evaluation.crossValidateModel(model, data, 10, new Random(1));
+
+        // Step 6: Output the evaluation results
+        System.out.println(evaluation.toSummaryString("\nEvaluation Results\n====================\n", false));
+
+        // Step 7: Make predictions for a new instance (a new flower)
+        // Example: New flower measurements
+        double sepalLength = 5.1;
+        double sepalWidth = 3.5;
+        double petalLength = 1.4;
+        double petalWidth = 0.2;
+
+        // Step 8: Create a new instance for prediction
+        Instance newInstance = new Instance(5);
+        newInstance.setValue(data.attribute("sepal_length"), sepalLength);
+        newInstance.setValue(data.attribute("sepal_width"), sepalWidth);
+        newInstance.setValue(data.attribute("petal_length"), petalLength);
+        newInstance.setValue(data.attribute("petal_width"), petalWidth);
+
+        // Add the instance to the dataset
+        Instances predictionData = new Instances(data, 0);
+        predictionData.add(newInstance);
+
+        // Step 9: Predict the class label for the new instance
+        double predictedClass = model.classifyInstance(newInstance);
+        String predictedSpecies = data.classAttribute().value((int) predictedClass);
+
+        System.out.println("\nPredicted Species for the new flower: " + predictedSpecies);
+    }
+}
