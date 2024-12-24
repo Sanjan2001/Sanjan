@@ -1,0 +1,76 @@
+import weka.core.Instances;
+import weka.core.converters.CSVLoader;
+import weka.classifiers.Evaluation;
+import weka.classifiers.functions.LinearRegression;
+import weka.classifiers.trees.RandomForest;
+import weka.core.Attribute;
+import weka.core.DenseInstance;
+
+import java.io.File;
+import java.util.ArrayList;
+
+public class StockPricePrediction {
+    public static void main(String[] args) throws Exception {
+        // Load dataset (CSV file)
+        CSVLoader loader = new CSVLoader();
+        loader.setSource(new File("stock_data.csv"));
+        Instances data = loader.getDataSet();
+        
+        // Step 1: Preprocessing
+        // We want to predict the 'Close' price, so let's set the target variable (class index) to the last column.
+        data.setClassIndex(data.numAttributes() - 1);
+        
+        // Step 2: Split the data (optional, here we assume training on entire dataset)
+        // You can split into training and testing sets if needed (e.g., 80% for training and 20% for testing).
+        
+        // Step 3: Build a model
+        // We will use Linear Regression (a simple model for demonstration)
+        LinearRegression model = new LinearRegression();
+        
+        // Train the model with the dataset
+        model.buildClassifier(data);
+        
+        // Step 4: Evaluate the model (optional)
+        // We will use cross-validation for evaluation (10-fold cross-validation).
+        Evaluation eval = new Evaluation(data);
+        eval.crossValidateModel(model, data, 10, new java.util.Random(1));
+        
+        // Print the evaluation result
+        System.out.println(eval.toSummaryString("\nResults\n========\n", false));
+        
+        // Step 5: Make predictions on a new instance (predicting the closing price)
+        // Let's say we want to predict the closing price for the next day, using the previous day's data.
+        
+        // Example new instance: (Open = 154.00, High = 155.50, Low = 153.25, Volume = 1250000)
+        double open = 154.00;
+        double high = 155.50;
+        double low = 153.25;
+        double volume = 1250000;
+        
+        // Step 6: Creating an instance with the above values
+        ArrayList<Attribute> attributes = new ArrayList<>();
+        attributes.add(new Attribute("Open"));
+        attributes.add(new Attribute("High"));
+        attributes.add(new Attribute("Low"));
+        attributes.add(new Attribute("Close"));
+        attributes.add(new Attribute("Volume"));
+        
+        // Create an instance with no class (the class will be set by the classifier later)
+        Instances newInstanceData = new Instances("TestInstances", attributes, 1);
+        newInstanceData.setClassIndex(newInstanceData.numAttributes() - 1);
+        
+        // Create a new instance for prediction
+        DenseInstance newInstance = new DenseInstance(5);
+        newInstance.setValue(attributes.get(0), open);
+        newInstance.setValue(attributes.get(1), high);
+        newInstance.setValue(attributes.get(2), low);
+        newInstance.setValue(attributes.get(3), "0"); // Placeholder, will be predicted
+        newInstance.setValue(attributes.get(4), volume);
+        
+        newInstanceData.add(newInstance);
+        
+        // Step 7: Predict the closing price (the class label)
+        double predictedClose = model.classifyInstance(newInstance);
+        System.out.println("Predicted Closing Price: " + predictedClose);
+    }
+}
