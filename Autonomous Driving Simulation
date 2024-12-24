@@ -1,0 +1,115 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class AutonomousDrivingSimulation extends JPanel implements ActionListener {
+
+    // Car properties
+    private double carX = 200; // Initial X position
+    private double carY = 300; // Initial Y position
+    private double carAngle = 0; // Initial angle
+    private double carSpeed = 2; // Speed of the car
+    private double steeringAngle = 0; // Steering angle (in radians)
+    
+    // Road and lane properties
+    private final int laneWidth = 400; // Width of the road
+    private final int laneCenterX = 400; // Center X of the road
+    private final int laneCenterY = 350; // Y position of the center lane
+
+    private Timer timer;
+    
+    // Obstacle properties
+    private int obstacleX = 600;
+    private int obstacleY = 350;
+    private int obstacleWidth = 30;
+    private int obstacleHeight = 30;
+
+    public AutonomousDrivingSimulation() {
+        // Setup the timer to update the simulation every 20 ms
+        timer = new Timer(20, this);
+        timer.start();
+
+        // Key listener for controlling the car
+        addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+                    steeringAngle -= 0.1; // Turn left
+                } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                    steeringAngle += 0.1; // Turn right
+                }
+            }
+        });
+        setFocusable(true);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g;
+        
+        // Clear screen
+        g2d.clearRect(0, 0, getWidth(), getHeight());
+
+        // Draw road
+        g2d.setColor(Color.GRAY);
+        g2d.fillRect(0, 0, getWidth(), getHeight());
+
+        // Draw lanes (left and right)
+        g2d.setColor(Color.WHITE);
+        g2d.fillRect(laneCenterX - laneWidth / 2, 0, laneWidth, getHeight());
+
+        // Draw the car
+        g2d.setColor(Color.RED);
+        g2d.translate(carX, carY); // Move the origin to the car's location
+        g2d.rotate(carAngle); // Rotate by car's angle
+        g2d.fillRect(-15, -10, 30, 20); // Draw the car body
+
+        // Reset transformation
+        g2d.setTransform(new AffineTransform());
+
+        // Draw obstacle
+        g2d.setColor(Color.BLACK);
+        g2d.fillRect(obstacleX, obstacleY, obstacleWidth, obstacleHeight);
+
+        // Draw the lane center for visual reference
+        g2d.setColor(Color.YELLOW);
+        g2d.fillRect(laneCenterX - 5, 0, 10, getHeight());
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // Lane-following behavior using PD control
+        double error = laneCenterX - carX;
+        double kp = 0.02; // Proportional gain
+        double kd = 0.1; // Derivative gain
+        double errorDerivative = error - steeringAngle;
+        
+        // PD controller for steering
+        steeringAngle = kp * error + kd * errorDerivative;
+        
+        // Update car's angle based on steering
+        carAngle += steeringAngle;
+        
+        // Update car's position
+        carX += carSpeed * Math.cos(carAngle);
+        carY += carSpeed * Math.sin(carAngle);
+
+        // Basic obstacle avoidance: If the car is close to the obstacle, stop
+        if (Math.abs(carX - obstacleX) < 50 && Math.abs(carY - obstacleY) < 50) {
+            carSpeed = 0; // Stop the car if it is too close to the obstacle
+        }
+
+        // Redraw the panel
+        repaint();
+    }
+
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Autonomous Driving Simulation");
+        AutonomousDrivingSimulation simulation = new AutonomousDrivingSimulation();
+        
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 600);
+        frame.add(simulation);
+        frame.setVisible(true);
+    }
+}
