@@ -1,0 +1,42 @@
+import weka.core.Instances;
+import weka.core.Attribute;
+import weka.core.DenseInstance;
+import weka.core.Instance;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+
+public class SimulateIoTData {
+    public static void main(String[] args) throws IOException {
+        // Create an attribute for the temperature readings
+        ArrayList<Attribute> attributes = new ArrayList<>();
+        attributes.add(new Attribute("temperature"));
+
+        // Create an empty Instances object
+        Instances data = new Instances("IoTData", attributes, 0);
+
+        // Add data to simulate normal IoT sensor readings (between 20 and 30 degrees)
+        for (int i = 0; i < 100; i++) {
+            double temperature = 20 + Math.random() * 10;  // Normal values between 20 and 30
+            Instance instance = new DenseInstance(1);
+            instance.setValue(0, temperature);
+            data.add(instance);
+        }
+
+        // Add some anomalous data points (outliers)
+        for (int i = 0; i < 10; i++) {
+            double temperature = 40 + Math.random() * 20;  // Abnormal values above 40
+            Instance instance = new DenseInstance(1);
+            instance.setValue(0, temperature);
+            data.add(instance);
+        }
+
+        // Save the dataset to a file
+        FileWriter writer = new FileWriter("iot_data.arff");
+        writer.write(data.toString());
+        writer.close();
+
+        System.out.println("Simulated IoT data with anomalies saved to iot_data.arff");
+    }
+}
