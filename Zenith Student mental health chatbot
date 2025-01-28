@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Mental Health Chatbot</title>
+  <!-- Link to the favicon -->
+  <link rel="icon" href="logo.jpg" type="image/jpeg">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #1e1f33;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .chat-container {
+      width: 450px;
+      background-color: #ffffff;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .chat-header {
+      background-color: #a62479;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      font-size: 18px;
+      font-weight: bold;
+      position: relative;
+    }
+    .chat-header img {
+      position: absolute;
+      left: 10px;
+      top: 5px;
+      height: 30px;
+      width: 30px;
+      border-radius: 50%;
+    }
+    .chat-messages {
+      height: 450px;
+      overflow-y: auto;
+      padding: 10px;
+      background-color: #c3ead4;
+    }
+    .message {
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 5px;
+      max-width: 80%;
+    }
+    .user-message {
+      background-color: #8dc78d;
+      align-self: flex-end;
+    }
+    .bot-message {
+      background-color: #f1f1f1;
+      align-self: flex-start;
+    }
+    .chat-input {
+      display: flex;
+      padding: 10px;
+      background-color: #ffffff;
+      border-top: 1px solid #ddd;
+    }
+    .chat-input input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    .chat-input button {
+      margin-left: 10px;
+      padding: 10px;
+      background-color: #0e6180;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .chat-input button:hover {
+      background-color: #800e50;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-header">
+      <img src="logo.jpg" alt="Chatbot Logo">
+      Student Mental Health Chatbot
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <!-- Chat messages will appear here -->
+    </div>
+    <div class="chat-input">
+      <input type="text" id="userInput" placeholder="Type your message..." />
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+   <script src="script1.js">
+  </script>
+</body>
+</html>
+
+//script1.js file
+const chatMessages = document.getElementById("chatMessages");
+
+    function sendMessage() {
+      const userInput = document.getElementById("userInput");
+      const userMessage = userInput.value.trim();
+
+      if (userMessage) {
+        // Display user's message
+        addMessage(userMessage, "user-message");
+
+ // Simulate bot response
+        setTimeout(() => {
+          const botResponse = getBotResponse(userMessage);
+          addMessage(botResponse, "bot-message");
+        }, 500);
+
+        // Clear input field
+        userInput.value = "";
+      }
+    }
+
+    function addMessage(message, className) {
+      const messageElement = document.createElement("div");
+      messageElement.className = className;
+      messageElement.textContent = message;
+      chatMessages.appendChild(messageElement);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function getBotResponse(message) {
+      const lowerCaseMessage = message.toLowerCase();
+  // Greeting
+  if (lowerCaseMessage.includes("hi") || lowerCaseMessage.includes("hello") || lowerCaseMessage.includes("hey")) {
+    return getRandomResponse([
+      "Hey, what can I do for you today?",
+      "I'm here for you! Tell me what's on your mind.",
+      "What’s up? How can I assist you right now?"
+    ]);
+  }
+  // Exam, Exam Tension, Exam Pressure
+else if (
+  lowerCaseMessage.includes("exam") || 
+  lowerCaseMessage.includes("exams") || 
+  lowerCaseMessage.includes("test") || 
+  lowerCaseMessage.includes("exam tension") || 
+  lowerCaseMessage.includes("exam pressure") || 
+  lowerCaseMessage.includes("studying")
+) {
+  return getRandomResponse([
+    "Exams are challenging, but you’ve got this! Focus on one topic at a time, and take short breaks to recharge.",
+    "Feeling the pressure of exams is normal. Try deep breathing exercises to calm your mind and improve focus.",
+    "Remember, exams are just a part of your journey. Do your best, but don’t let the pressure overwhelm you.",
+    "Tension before exams is common, but planning a study schedule and sticking to it can ease the stress.",
+    "Exams can feel intense, but trust your preparation and focus on what you’ve already learned—you’re ready for this!"
+  ]);
+}
+// Grades
+else if (
+  lowerCaseMessage.includes("grades") || 
+  lowerCaseMessage.includes("marks") || 
+  lowerCaseMessage.includes("results") || 
+  lowerCaseMessage.includes("scores")
+) {
+  return getRandomResponse([
+    "Grades are important, but they don’t define your worth. Focus on learning and growing from each experience.",
+    "It’s okay to feel concerned about grades, but remember that effort and progress matter more than any number on a paper.",
+    "Don’t let grades dictate your happiness. Use them as feedback to improve and move forward with confidence.",
+    "Results can be stressful, but every setback is an opportunity to learn and grow stronger. Keep going—you’ve got this!",
+    "Remember, grades are just one part of the bigger picture. Your skills, creativity, and determination count just as much."
+  ]);
+}
+  // Stress or Anxiety
+  else if (lowerCaseMessage.includes("stressed out") || lowerCaseMessage.includes("stress") || lowerCaseMessage.includes("feeling stressed") ||lowerCaseMessage.includes("feeling sad") || lowerCaseMessage.includes("feeling exhausted")) {
+    return getRandomResponse([
+      "Feeling stressed? Take a moment to breathe deeply with me. Inhale... Exhale. This can help you relax.",
+      "Hey, I know it’s tough. Want to talk about what’s making you feel this way? Talking it out can help ease the tension.",
+      "Stress can pile up sometimes. Maybe try a short walk or your favorite music? Physical movement can reduce stress."
+    ]);
+  } 
+  
+  else if (
+    lowerCaseMessage.includes("anxious") || 
+    lowerCaseMessage.includes("anxiety") || 
+    lowerCaseMessage.includes("nervous") || 
+    lowerCaseMessage.includes("worried")
+  ) {
+    return getRandomResponse([
+      "Anxiety can be overwhelming. Let’s take a deep breath together: Inhale for 4 seconds, hold for 4, and exhale for 4. Repeat a few times.",
+      "Feeling nervous? Try grounding yourself by focusing on your senses. For example, name 5 things you can see, 4 you can touch, 3 you can hear, 2 you can smell, and 1 you can taste.",
+      "Remember, you’re stronger than your anxiety. Take it one moment at a time, and know that this feeling will pass."
+    ]);
+  }
+  else if (
+    lowerCaseMessage.includes("anxiety attack") ||
+    lowerCaseMessage.includes("panic attack") ||
+    lowerCaseMessage.includes("anxious") ||
+    lowerCaseMessage.includes("panic")
+  ) {
+    return getRandomResponse([
+      "Anxiety attacks can feel overwhelming. Try grounding yourself by focusing on your senses: name 5 things you see, 4 things you can touch, 3 things you hear, 2 things you smell, and 1 thing you taste.",
+      "Take slow, deep breaths. Inhale for 4 seconds, hold for 4 seconds, and exhale for 4 seconds. Repeating this can help calm your body.",
+      "It’s okay to feel this way. Remind yourself: this feeling will pass. You are safe, and it’s your body’s response to stress.",
+      "If you’re having an anxiety attack, try to sit down, close your eyes, and breathe deeply. Focus on the sensation of your breath entering and leaving your body.",
+      "Reach out to someone you trust. Talking through what you’re feeling can help you feel less alone and more grounded."
+    ]);
+  }
+  // No Hope
+else if (
+  lowerCaseMessage.includes("no hope") || 
+  lowerCaseMessage.includes("hopeless") || 
+  lowerCaseMessage.includes("feel empty") || 
+  lowerCaseMessage.includes("nothing matters")
+) {
+  return getRandomResponse([
+    "I’m really sorry you’re feeling this way, but I want you to know that even in the darkest moments, there is always a path forward.",
+    "Sometimes, life can feel overwhelming, but even small steps can lead to meaningful change. You’re not alone in this.",
+    "When hope feels distant, it’s okay to take a break and focus on something small and positive. You don’t have to tackle everything at once.",
+    "It’s okay to feel like this sometimes, but please reach out to someone who can support you. There is always a way to start rebuilding hope.",
+    "I know it’s hard right now, but things can get better. It may take time, but there are always brighter days ahead. Hang in there."
+  ]);
+}
+// Frustration
+else if (
+  lowerCaseMessage.includes("frustration") || 
+  lowerCaseMessage.includes("frustrated") || 
+  lowerCaseMessage.includes("annoyed") || 
+  lowerCaseMessage.includes("irritated") || 
+  lowerCaseMessage.includes("angry") || 
+  lowerCaseMessage.includes("stressed")
+) {
+  return getRandomResponse([
+    "I understand how frustration can build up. Sometimes it helps to step away for a moment and clear your mind before tackling the issue again.",
+    "It’s okay to feel frustrated—it’s a sign that you care. Try breaking down the issue into smaller steps, and take it one thing at a time.",
+    "Frustration can be overwhelming, but don’t let it control you. Take deep breaths and refocus on what you can change right now.",
+    "Remember, frustration is temporary. Take a short break, relax, and return with a clearer mindset. You'll find your way through it.",
+    "When frustration hits, it’s important to pause and reflect. What can you control? Focusing on small actions can help you move forward."
+  ]);
+}
+// Friendship Issues
+else if (
+  lowerCaseMessage.includes("friendship issues") || 
+  lowerCaseMessage.includes("fighting with friends") || 
+  lowerCaseMessage.includes("friend drama") || 
+  lowerCaseMessage.includes("falling out with friends") || 
+  lowerCaseMessage.includes("misunderstanding with friends")
+) {
+  return getRandomResponse([
+    "Friendships can go through tough times, but open and honest communication can help resolve misunderstandings. It’s important to express how you feel and listen to your friend’s side too.",
+    "It’s normal to have disagreements with friends. The key is to work through them together, with empathy and understanding. Sometimes taking a break and then talking can help both sides.",
+    "If you're feeling disconnected from a friend, try reaching out and being open about your feelings. Sometimes, a simple conversation can clear the air and bring you closer.",
+    "Friendship struggles can feel heavy, but they’re also an opportunity to strengthen your bond. If you both care about the relationship, finding common ground is possible.",
+    "Sometimes, friends drift apart due to misunderstandings or changes in life. It’s okay to give each other space, but also consider having a heartfelt conversation to rebuild the connection."
+  ]);
+}
+// Fear and Failure
+else if (
+  lowerCaseMessage.includes("fear") || 
+  lowerCaseMessage.includes("failure") || 
+  lowerCaseMessage.includes("scared") || 
+  lowerCaseMessage.includes("afraid") || 
+  lowerCaseMessage.includes("nervous") || 
+  lowerCaseMessage.includes("doubt")
+) {
+  return getRandomResponse([
+    "Fear of failure is something everyone experiences. But remember, every failure is just a lesson in disguise. It’s part of the journey.",
+    "It’s okay to feel afraid, but don’t let fear stop you from trying. Failure isn’t final—it’s an opportunity to grow and learn.",
+    "Failure doesn’t define you. It’s just a stepping stone towards success. Take it as feedback and keep moving forward.",
+    "Feeling afraid of failing is normal, but don’t let it hold you back. You have the strength to face challenges head-on and learn from them.",
+    "Fear and failure are just part of the process. It’s the courage to continue despite them that leads to growth and success."
+  ]);
+}
+// Overcommitment
+else if (
+  lowerCaseMessage.includes("overcommitment") || 
+  lowerCaseMessage.includes("too many responsibilities") || 
+  lowerCaseMessage.includes("spread too thin") || 
+  lowerCaseMessage.includes("too much on my plate") || 
+  lowerCaseMessage.includes("burning out")
+) {
+  return getRandomResponse([
+    "It’s easy to take on too much, but remember that it’s okay to say no. Your well-being is just as important as your responsibilities.",
+    "Overcommitment can lead to burnout. It’s important to set boundaries and prioritize your time. Taking a step back to reassess your commitments can help you regain balance.",
+    "Sometimes, we take on more than we can handle out of a sense of duty or fear of letting others down. But it’s okay to take a break and focus on what truly matters.",
+    "Overloading yourself with commitments can take a toll on your mental and physical health. Consider re-evaluating your tasks and delegating or postponing when possible.",
+    "You don’t have to do everything at once. It’s important to pace yourself and focus on your health first. You can always reassess your priorities when you’re feeling better."
+  ]);
+}
+// Boundaries
+else if (
+  lowerCaseMessage.includes("boundaries") || 
+  lowerCaseMessage.includes("personal boundaries") || 
+  lowerCaseMessage.includes("respect my space") || 
+  lowerCaseMessage.includes("limits") || 
+  lowerCaseMessage.includes("need space")
+) {
+  return getRandomResponse([
+    "Setting boundaries is a vital form of self-care. It’s okay to say ‘no’ when you need to protect your peace and well-being.",
+    "Establishing clear boundaries is important for maintaining healthy relationships. You have the right to take time for yourself.",
+    "It’s essential to communicate your limits with others. Boundaries are not about rejecting people—they’re about honoring your needs and values.",
+    "Boundaries allow you to protect your emotional and mental health. It’s okay to prioritize yourself without guilt.",
+    "Remember, boundaries are a sign of self-respect. When you set them, you're teaching others how to treat you and protecting your own well-being."
+  ]);
+}
+// Coursework Pile-Up
+else if (
+  lowerCaseMessage.includes("coursework pile-up") || 
+  lowerCaseMessage.includes("too much coursework") || 
+  lowerCaseMessage.includes("overwhelmed by assignments") || 
+  lowerCaseMessage.includes("too many deadlines") || 
+  lowerCaseMessage.includes("drowning in work")
+) {
+  return getRandomResponse([
+    "When coursework piles up, it’s easy to feel overwhelmed. Try breaking down your assignments into smaller, manageable tasks. Tackling them one at a time can reduce the pressure.",
+    "It might seem like a lot right now, but prioritizing deadlines and focusing on one task at a time can help you make steady progress. Take short breaks to keep your mind refreshed.",
+    "Try organizing your tasks by deadlines and importance. Set small goals for each study session, and before you know it, you’ll start crossing things off your list!",
+    "Acknowledge the pressure, but don’t let it paralyze you. Focus on one thing at a time. If you’re feeling stuck, reach out for help from peers or professors. You don’t have to do it all alone.",
+    "Remember, it's okay to ask for extensions or help when the workload feels overwhelming. Prioritizing your mental health during times like this is crucial for long-term success."
+  ]);
+}
+// Feeling Lost in Studies
+else if (
+  lowerCaseMessage.includes("feeling lost in studies") || 
+  lowerCaseMessage.includes("confused about studies") || 
+  lowerCaseMessage.includes("can't keep up with studies") || 
+  lowerCaseMessage.includes("feeling directionless in school") || 
+  lowerCaseMessage.includes("no clarity in studies")
+) {
+  return getRandomResponse([
+    "It’s normal to feel lost sometimes, especially with all the information and expectations. Try breaking your studies into smaller chunks and focus on one topic at a time.",
+    "If you’re feeling directionless, consider talking to a teacher, counselor, or even a peer who can guide you. Sometimes, getting an outside perspective can help you find your way.",
+    "Take a moment to reflect on why you started studying in the first place. Reconnecting with your motivations might help bring clarity and direction to your studies.",
+    "When you feel overwhelmed, it’s helpful to set small, achievable goals. Rather than thinking about everything at once, try to focus on one task or subject at a time.",
+    "It’s okay to not have everything figured out right now. If you’re feeling lost, it’s important to reach out to someone for guidance or even take a short break to reset your mind."
+  ]);
+}
+// Lack of Sleep
+else if (
+  lowerCaseMessage.includes("lack of sleep") || 
+  lowerCaseMessage.includes("not getting enough sleep") || 
+  lowerCaseMessage.includes("sleep deprived") || 
+  lowerCaseMessage.includes("can't sleep") || 
+  lowerCaseMessage.includes("feeling exhausted")
+) {
+  return getRandomResponse([
+    "Lack of sleep can really affect your mood and focus. Try creating a calming bedtime routine—maybe some light reading or listening to relaxing music before bed.",
+    "Consider setting a consistent sleep schedule. Going to bed and waking up at the same time every day, even on weekends, can help regulate your sleep cycle.",
+    "Try reducing screen time before bed. The blue light from phones and computers can interfere with your ability to fall asleep. Aim to unplug at least 30 minutes before bed.",
+    "If you’re feeling exhausted during the day, try incorporating short naps (10-20 minutes) to recharge, but avoid long naps that can interfere with nighttime sleep.",
+    "Stress and anxiety can impact sleep. Try practicing relaxation techniques like deep breathing, meditation, or gentle stretching to ease your mind before bed."
+  ]);
+}
+// Competitive Environment
+else if (
+  lowerCaseMessage.includes("competitive environment") || 
+  lowerCaseMessage.includes("competition stress") || 
+  lowerCaseMessage.includes("feeling pressured to compete") || 
+  lowerCaseMessage.includes("too much competition") || 
+  lowerCaseMessage.includes("pressure to succeed")
+) {
+  return getRandomResponse([
+    "Being in a competitive environment can be overwhelming at times. Remember, it's important to focus on your own progress rather than comparing yourself to others.",
+    "It's natural to feel pressured, but don’t forget that everyone is on their own journey. Keep setting personal goals and celebrate your own achievements, no matter how small.",
+    "Try to manage competition by balancing work and rest. Overworking yourself can lead to burnout, so be sure to take time for relaxation and self-care.",
+    "In a competitive world, it's essential to remember that success is personal. Your worth isn’t determined by how others perform. Focus on growth and resilience.",
+    "Competition can be motivating, but it can also bring stress. Try to stay grounded by practicing mindfulness or deep breathing exercises to maintain your calm and focus."
+  ]);
+}
+// Bullying
+else if (
+  lowerCaseMessage.includes("bullying") || 
+  lowerCaseMessage.includes("bullied") || 
+  lowerCaseMessage.includes("harassment") || 
+  lowerCaseMessage.includes("cyberbullying") || 
+  lowerCaseMessage.includes("feeling unsafe")
+) {
+  return getRandomResponse([
+    "I'm really sorry you're going through this. No one should ever be bullied. It's important to reach out to someone you trust, like a friend, family member, or counselor, for support.",
+    "Remember, bullying is not a reflection of your worth. The people who bully others often have their own issues. You're not alone—there are people who care about you.",
+    "If you feel unsafe, make sure to tell someone who can help, such as a teacher, counselor, or a trusted adult. It’s important to seek support and make your voice heard.",
+    "Bullying can be emotionally draining, but try to remind yourself of your strengths. You are valuable and deserving of respect. Surround yourself with positive, supportive people.",
+    "If you’re being bullied online, report it to the platform and block the person. You don't have to face this alone—reach out to a professional or helpline for guidance."
+  ]);
+}
+// Balancing Social Life
+else if (
+  lowerCaseMessage.includes("balancing social life") || 
+  lowerCaseMessage.includes("too busy for friends") || 
+  lowerCaseMessage.includes("work and social life balance") || 
+  lowerCaseMessage.includes("can't find time for friends") || 
+  lowerCaseMessage.includes("social life stress")
+) {
+  return getRandomResponse([
+    "Balancing social life and responsibilities can be tricky, but it’s important to prioritize your well-being. Try scheduling time with friends just like you would with work or study.",
+    "Don’t be too hard on yourself. Life gets busy, but remember that spending time with friends and socializing is essential for mental health. Even small moments together can make a difference.",
+    "If you're feeling overwhelmed, it might help to plan your week ahead. Set aside specific times for both social activities and personal time to recharge.",
+    "It’s okay to say no sometimes. Setting boundaries and communicating your needs to friends can help create a healthy balance between social time and personal time.",
+    "If you’re feeling stressed about balancing social life, start with small interactions—maybe a quick call or a coffee catch-up with a close friend. Little moments matter."
+  ]);
+}
+// Changing Majors
+else if (
+  lowerCaseMessage.includes("changing my major") || 
+  lowerCaseMessage.includes("switching majors") || 
+  lowerCaseMessage.includes("undecided major") || 
+  lowerCaseMessage.includes("not interested in my major") || 
+  lowerCaseMessage.includes("major confusion")
+) {
+  return getRandomResponse([
+    "It's completely normal to feel unsure about your major. Many students change their path as they discover new interests and strengths. Take the time to explore options that align with your passions.",
+    "Changing majors can be a big decision, but it's an opportunity to find something that excites you. Talk to a career counselor or academic advisor to guide you through the process.",
+    "Remember, your major doesn't define your future. If you're not enjoying your current path, it's okay to pivot. Choose something that resonates with your goals and values.",
+    "If you’re unsure, try taking elective courses in different areas that interest you. This can help you discover new passions before committing to a new major.",
+    "It’s okay to change your mind! Many successful people didn’t follow a straight path. Focus on what truly interests you and your happiness will follow."
+  ]);
+}
+  // Mental Health Help
+  else if (lowerCaseMessage.includes("talk") || lowerCaseMessage.includes("feeling down")) {
+    return getRandomResponse([
+      "I am here to listen like a good friend. Talking about how you feel is an important step towards feeling better.",
+      "Tell me, I'm all ears! What's on your mind? Sometimes just sharing your thoughts can lighten the load.",
+      "try to open-up with your freinds, spend some time to get relaxed and they don't leave you to feel down."
+    ]);
+  }
+  else if (
+lowerCaseMessage.includes("sad") || lowerCaseMessage.includes("feeling sad") || lowerCaseMessage.includes("unhappy") || lowerCaseMessage.includes("down")
+) {
+return getRandomResponse([
+  "I'm sorry you're feeling sad. Want to share what's been bothering you?",
+  "It's okay to feel sad sometimes. I'm here for you—let's talk it out.",
+  "Remember, you're not alone. Sadness can feel heavy, but talking about it can help lighten the load.",
+  "Feeling sad? Take a moment to acknowledge your feelings and know that it's okay. You're doing your best."
+]);
+}
+else if (
+    lowerCaseMessage.includes("lonely") || 
+    lowerCaseMessage.includes("loneliness") || 
+    lowerCaseMessage.includes("alone") || 
+    lowerCaseMessage.includes("isolated")
+  ) {
+    return getRandomResponse([
+      "I'm sorry you're feeling lonely. Remember, you are not alone, and there are people who care about you.",
+      "Feeling lonely can be tough. Maybe you could reach out to a friend, join an online community, or try a new hobby to connect with others.",
+      "When you're feeling isolated, it can help to talk about it. I’m here to listen if you’d like to share.",
+      "Loneliness is a natural feeling sometimes. Have you thought about spending time doing something you enjoy or reaching out to someone you trust?",
+      "Remember, you are valuable and loved. Even when it feels like no one is around, you matter deeply to those who know you."
+    ]);
+  }
+// Stress or Anxiety
+else if (lowerCaseMessage.includes("stressed out") || lowerCaseMessage.includes("stress") || lowerCaseMessage.includes("feeling stressed") || lowerCaseMessage.includes("feeling exhausted")) {
+return getRandomResponse([
+  "Feeling stressed? Take a moment to breathe deeply with me. Inhale... Exhale. This can help you relax.",
+  "Hey, I know it’s tough. Want to talk about what’s making you feel this way? Talking it out can help ease the tension.",
+  "Stress can pile up sometimes. Maybe try a short walk or your favorite music? Physical movement can reduce stress."
+]);
+}
+else if (
+  lowerCaseMessage.includes("coping") ||
+  lowerCaseMessage.includes("cope") ||
+  lowerCaseMessage.includes("how to deal with") ||
+  lowerCaseMessage.includes("manage stress")
+) {
+  return getRandomResponse([
+    "Coping can be challenging, but starting small helps. Try identifying what’s within your control and focus on that.",
+    "Different coping strategies work for different people. Have you tried journaling, talking to a trusted friend, or practicing mindfulness?",
+    "It’s okay to feel overwhelmed sometimes. Deep breathing or even a short walk can help you regain clarity.",
+    "When dealing with stress, it can help to break problems into smaller, manageable parts and address them one at a time.",
+    "Coping is about finding what works for you. Whether it’s exercise, hobbies, or reaching out to someone, each small step can make a difference."
+  ]);
+}
+else if (
+  lowerCaseMessage.includes("burnout") || 
+  lowerCaseMessage.includes("burned out") || 
+  lowerCaseMessage.includes("exhausted") || 
+  lowerCaseMessage.includes("drained")
+) {
+  return getRandomResponse([
+    "Burnout can feel overwhelming. Have you tried setting aside time to rest and recharge? Even small breaks can make a difference.",
+    "When burnout hits, it’s important to prioritize yourself. Could you schedule some time to do something that genuinely relaxes you?",
+    "Feeling drained is tough. Can you delegate tasks or ask for support from someone you trust? You don’t have to do it all alone.",
+    "Burnout often means you’ve been pushing yourself too hard. Taking a step back to reassess your workload might help ease the pressure.",
+    "Your well-being is important. Have you tried disconnecting from work or responsibilities for a bit? A digital detox or nature walk might help.",
+    "If you’re feeling burned out, remember that you’re only human. It’s okay to pause, reflect, and take care of your mental health."
+  ]);
+}
+  else if (lowerCaseMessage.includes("judge") || lowerCaseMessage.includes("laugh at me") || lowerCaseMessage.includes("laugh")) {
+    return getRandomResponse([
+            "I'm really sorry you're feeling this way, but no one should ever make you feel judged. Everyone has their unique journey.",
+            "I understand that being judged can hurt, but remember, the people who matter will never judge you for who you are.",
+            "It’s tough when others laugh or judge, but remember, their opinions don’t define your worth. You are valuable and important.",
+            "Everyone has been through tough moments, and no one should belittle your feelings. You deserve kindness and respect.",
+            "Sometimes, people don’t realize how their actions affect others. It’s important to surround yourself with those who support you."
+     ]);
+  }
+  else if (
+    lowerCaseMessage.includes("overwhelmed") || 
+    lowerCaseMessage.includes("overwhelm") || 
+    lowerCaseMessage.includes("too much to handle") || 
+    lowerCaseMessage.includes("can't cope")
+  ) {
+    return getRandomResponse([
+      "It sounds like you’re carrying a lot right now. Try breaking tasks into smaller steps and focusing on one thing at a time.",
+      "When everything feels too much, taking a short break to breathe deeply or walk around can give your mind some space.",
+      "It’s okay to feel this way. Sometimes writing down what’s overwhelming you can help organize your thoughts.",
+      "You’re not alone in this. Is there a specific task or thought you can share? Talking through it might help lighten the load.",
+      "Feeling overwhelmed is natural when there’s so much happening. Remember, you’re allowed to step back and prioritize yourself.",
+      "Try closing your eyes for a moment and visualizing a calm place. This can help reset your mind and ease the weight you’re feeling."
+    ]);
+  }
+// Lack of confidence 
+ else if (
+    lowerCaseMessage.includes("confidence") || 
+    lowerCaseMessage.includes("self-esteem") || 
+    lowerCaseMessage.includes("self-doubt") || 
+    lowerCaseMessage.includes("believe in myself")
+  ) {
+    return getRandomResponse([
+      "You’re capable of more than you think! Reflect on moments you’ve overcome challenges—it can boost your confidence.",
+      "Building confidence is a journey. Start with small wins and acknowledge your progress along the way.",
+      "Believe in your potential. Even if self-doubt creeps in, remember you’ve made it through tough times before.",
+      "Confidence isn’t about perfection; it’s about believing in your ability to grow. Mistakes are just part of the process.",
+      "When in doubt, take a moment to remind yourself of your strengths and what makes you unique. You’ve got this!"
+    ]);
+  }
+  // Self-esteem
+else if (
+  lowerCaseMessage.includes("self-esteem") || 
+  lowerCaseMessage.includes("self-worth") || 
+  lowerCaseMessage.includes("confidence issues") || 
+  lowerCaseMessage.includes("low self-esteem")
+) {
+  return getRandomResponse([
+    "Your worth isn’t tied to others’ opinions. Take a moment to appreciate your strengths—you have plenty of them!",
+    "Building self-esteem takes time and patience. Celebrate small victories, and don’t be too hard on yourself.",
+    "Remember, you are enough just as you are. Treat yourself with kindness and focus on your growth.",
+    "Self-esteem grows when you acknowledge your progress. Reflect on what you’ve achieved, no matter how small.",
+    "It’s okay to doubt yourself sometimes, but don’t let it define you. You bring unique value to the world!"
+  ]);
+}
+// Health Concerns
+else if (
+  lowerCaseMessage.includes("health concerns") || 
+  lowerCaseMessage.includes("health problems") || 
+  lowerCaseMessage.includes("physical health") || 
+  lowerCaseMessage.includes("well-being") || 
+  lowerCaseMessage.includes("health issues")
+) {
+  return getRandomResponse([
+    "It’s completely understandable to feel concerned when it comes to health. Whether it’s a physical or mental health concern, taking proactive steps to address it is important. If you’re experiencing symptoms or discomfort, it’s best to seek professional medical advice to get a proper diagnosis and treatment plan. Remember, your health should always be a priority, and healthcare professionals are there to guide you through it.",
+    
+    "Health concerns can range from minor issues to more significant challenges, and it’s natural to feel anxious or uncertain. Start by identifying the symptoms you’re experiencing and consider keeping a health journal. This can help track patterns and provide useful information to your doctor. Additionally, adopting a healthy lifestyle, including regular exercise, a balanced diet, and adequate sleep, can help you better manage stress and improve your overall well-being. Always consult a healthcare provider if something feels off or if you’re unsure about your symptoms.",
+    
+    "When dealing with health issues, it’s important not to ignore warning signs. If you’re feeling persistent discomfort or experiencing new symptoms, don’t hesitate to make an appointment with a healthcare professional. Regular check-ups are key to identifying potential problems early on. In addition to seeking professional help, consider integrating stress-relief techniques like meditation, yoga, or breathing exercises into your routine, as mental well-being plays a significant role in overall health.",
+    
+    "I know that health concerns can be overwhelming, especially if you’re unsure about what might be causing them. One of the first steps in managing health is identifying and addressing the root cause. Sometimes it can be something small like lack of sleep, poor diet, or stress, while at other times, it might require medical intervention. Try not to jump to conclusions, and make sure to speak with a healthcare professional for a comprehensive evaluation. If you feel overwhelmed, mental health support is also vital as stress can have a big impact on physical health.",
+    
+    "It’s natural to worry when health issues arise, but there are many resources available to help you navigate through them. If your concerns are affecting your daily life, talking to a healthcare provider will give you peace of mind and a clear course of action. Lifestyle adjustments such as practicing good sleep hygiene, staying hydrated, managing stress, and incorporating physical activity into your day can make a noticeable difference. Your health is valuable, and taking steps to improve it, both mentally and physically, can go a long way in enhancing your quality of life."
+  ]);
+}
+// Public Transport Hassles
+else if (
+  lowerCaseMessage.includes("public transport") || 
+  lowerCaseMessage.includes("commuting") || 
+  lowerCaseMessage.includes("transportation problems") || 
+  lowerCaseMessage.includes("bus issues") || 
+  lowerCaseMessage.includes("train delays") || 
+  lowerCaseMessage.includes("traffic")
+) {
+  return getRandomResponse([
+    "I get it! Commuting can be a real stressor, especially when public transport is delayed or overcrowded. One way to handle this is by planning your trips in advance—knowing peak hours, having backup routes, and checking for real-time updates can save you time and reduce stress. If you're always facing delays, consider alternative options like biking, carpooling, or using ride-sharing services if it fits your schedule and budget.",
+    "Public transport issues can make your day feel chaotic. While we can’t always control the delays or overcrowding, we can try to manage our response. Bring along a book, music, or podcast to make the ride more enjoyable. It also helps to use the time for relaxation or mental preparation for the day ahead, turning a stressful situation into an opportunity for self-care.",
+    "Dealing with public transport hassles can be frustrating, especially when you have a tight schedule. However, finding ways to stay calm is key. If delays or crowded buses or trains are stressing you out, deep breathing or listening to calming music can help you regain composure. You might also want to use the commute to catch up on something enjoyable or productive, so it doesn’t feel like wasted time.",
+    "Commuting can really test your patience, especially during peak hours or when things go wrong. If it's causing a lot of stress, try to reframe the situation. Consider how public transport helps you avoid traffic or how it gives you a bit of time to unwind before and after work or school. Another option is to explore flexible working hours or telecommuting to reduce the frequency of these transport-related stresses.",
+    "I know how challenging public transport can be—delays, overcrowding, and sometimes unexpected disruptions can throw your entire day off. If you're struggling with frequent transport problems, consider looking into apps or services that track bus or train schedules in real-time to make planning easier. You can also explore shorter routes or staggered schedules if possible. In the meantime, try to stay positive and use that travel time to relax, reflect, or listen to your favorite music to improve the experience."
+  ]);
+}
+// Doubting Major Choice
+else if (
+  lowerCaseMessage.includes("doubting my major") || 
+  lowerCaseMessage.includes("choosing a major") || 
+  lowerCaseMessage.includes("confused about my major") || 
+  lowerCaseMessage.includes("second thoughts on my major") || 
+  lowerCaseMessage.includes("regret my major")
+) {
+  return getRandomResponse([
+    "It's completely normal to have doubts about your major, especially when you're making such an important decision about your future. Take some time to reflect on what interests you most and think about your long-term goals. Consider whether the major you're pursuing aligns with your passion, skills, and career aspirations. If you're unsure, talk to academic advisors or professors who can provide insights into how the major could shape your future. Remember, it's okay to change direction if something doesn't feel right!",
+    "I understand how tough it can be to feel uncertain about your major. College is a time of exploration, and it's natural to question whether you're on the right path. Consider speaking to people already working in fields related to your major. Gaining a better understanding of what the job entails could give you clarity. Also, you can try taking elective courses in other subjects to see if any spark a new interest. You’re not locked into a choice, and it’s okay to reassess your direction!",
+    "Having doubts about your major is more common than you might think! Many students face uncertainty at some point. A good approach is to focus on your strengths and what excites you. Do some research or even internship opportunities in areas you’re curious about. You could also talk to career counselors who specialize in helping students find the right fit for their interests and abilities. Changing majors is also a viable option if you realize your initial choice doesn’t align with your true passion.",
+    "It’s okay to question your major and take a step back to evaluate if it’s the right fit for you. This decision doesn’t have to be set in stone. Reflect on your interests, talk to faculty members, and seek advice from people in the field. Many students change their major after exploring different subjects, so don't be afraid to follow your instincts. You have plenty of time to figure it out. What's important is finding something that genuinely excites and motivates you!",
+    "Doubting your major can feel overwhelming, but it’s a normal part of the academic journey. One thing you could do is reach out to a mentor or advisor to discuss your concerns and options. They can help you identify your strengths, interests, and career goals, and guide you toward a path that feels more aligned with your passions. Remember, you're not alone—many students go through this phase, and it’s okay to reassess and explore other opportunities if needed."
+  ]);
+}
+// Unfair Treatment
+else if (
+  lowerCaseMessage.includes("unfair treatment") || 
+  lowerCaseMessage.includes("discrimination") || 
+  lowerCaseMessage.includes("treated unfairly") || 
+  lowerCaseMessage.includes("inequality") || 
+  lowerCaseMessage.includes("unjust behavior")
+) {
+  return getRandomResponse([
+    "I'm really sorry you're experiencing this. No one deserves to be treated unfairly, and it’s important to recognize that your feelings are valid. If you’re in an environment where you're facing discrimination or unfair treatment, consider talking to someone you trust about the situation. Whether it’s a counselor, HR department, or even a close friend, sharing your experience can help you navigate what to do next. If you feel safe doing so, documenting the incidents may also be helpful for future steps.",
+    "It’s painful when you feel like you're being treated unfairly. Remember that your worth isn't defined by how others treat you. It’s important to stand up for yourself, but do so in a way that feels safe and empowered for you. If possible, try to address the situation with the person or group involved. Sometimes, people aren’t aware of the harm they are causing, and a calm, open conversation may help resolve misunderstandings. If things don’t improve, consider seeking external support from a mentor, counselor, or human resources.",
+    "Experiencing unfair treatment can leave you feeling disheartened, but please remember you're not alone in facing this. There are support systems available to you—whether it’s speaking with a supervisor, academic advisor, or counselor. If the unfair treatment involves harassment or discrimination, there are often formal processes in place to address the issue, and you have the right to take action. It's important to acknowledge your feelings and take steps toward addressing the issue in a way that empowers you and maintains your well-being.",
+    "I can understand how painful it must be to experience unfair treatment, and it’s important to take care of your mental and emotional health through this process. It might help to talk to a trusted friend, colleague, or mentor about what you’re going through. If you feel like your safety or well-being is at risk, it might be worth considering official channels like speaking with HR, a counselor, or even legal support, depending on the situation. You deserve to feel respected and valued in all environments.",
+    "It can be incredibly tough when you're treated unfairly, especially if it feels like no one else understands. It’s important to remember that you're allowed to advocate for yourself, and there are people who care about ensuring fairness and equality. Documenting the instances of unfair treatment can give you clarity on what happened and could help when taking steps to address the situation. Seek support from individuals or organizations that specialize in handling discrimination, such as HR departments, advocacy groups, or counselors."
+  ]);
+}
+// Feeling Unsupported
+else if (
+  lowerCaseMessage.includes("feeling unsupported") || 
+  lowerCaseMessage.includes("alone") || 
+  lowerCaseMessage.includes("no one is there for me") || 
+  lowerCaseMessage.includes("feeling neglected") || 
+  lowerCaseMessage.includes("no support")
+) {
+  return getRandomResponse([
+    "I'm really sorry you're feeling this way. Feeling unsupported can be really difficult, but please know you're not alone. Sometimes, those around us may not realize we need support, and it's important to reach out to people who can provide that. It might be helpful to talk to a close friend, family member, or even a professional who can listen and guide you through what you’re feeling.",
+    "It’s tough when you feel like you don’t have the support you need. You are deserving of kindness and support, and it’s okay to ask for it when you’re struggling. Have you considered talking to someone about how you're feeling? Reaching out for help, whether it's from a counselor, a friend, or a family member, can be a step toward finding the support that can make a real difference in your life.",
+    "I understand how it feels to be in a place where you feel unsupported. Sometimes, the people we expect to lean on may not be able to offer the support we need, but that doesn’t mean support isn’t available. You can find understanding from a counselor or support group, or even through online communities that share similar experiences. It’s important to communicate how you feel with the people around you, and it’s okay to ask for what you need in times of difficulty.",
+    "Feeling unsupported can feel isolating, but please remember that help is available. If the people you rely on aren’t providing the support you need, consider reaching out to someone else—maybe a colleague, a mentor, or even a therapist. If you're feeling overwhelmed, professional help can provide you with strategies to cope and manage your emotions. You deserve to feel heard and supported.",
+    "It's natural to feel down when it seems like no one is there for you. However, there are resources that can provide the support you need, whether it’s professional help or reaching out to others who understand. You might want to connect with online communities or local support groups where you can share your experiences and receive support. You're valuable, and you don’t have to go through difficult times alone."
+  ]);
+}
+// Balancing Clubs & Academics
+else if (
+  lowerCaseMessage.includes("balancing clubs and academics") || 
+  lowerCaseMessage.includes("extracurricular activities") || 
+  lowerCaseMessage.includes("work management") || 
+  lowerCaseMessage.includes("school and clubs") || 
+  lowerCaseMessage.includes("juggling clubs and studies")
+) {
+  return getRandomResponse([
+    "Balancing academics with extracurriculars can be challenging, but it's all about managing your time wisely. Prioritize your tasks and make a weekly schedule. Consider blocking out time for both study and club activities, ensuring you’re not neglecting one for the other. It might also help to set clear goals for both areas, so you can stay focused and motivated.",
+    "It’s great that you’re involved in clubs! Extracurriculars can provide valuable experiences, but it’s important to ensure they don’t overwhelm your academic responsibilities. Try to set realistic expectations for your participation in clubs, and communicate with your club leaders or teammates if you need a break to focus on your studies. Time-blocking or using a planner to organize both can help you stay on track.",
+    "Managing both academics and extracurriculars requires balancing priorities. One useful strategy is breaking down your tasks into smaller, manageable parts. When you focus on one task at a time—whether it’s studying for a test or preparing for a club meeting—it helps reduce stress. Additionally, don't hesitate to ask for help or delegate tasks if you feel overwhelmed.",
+    "The key to balancing academics and clubs is learning how to manage your energy, not just your time. It’s important to take breaks, sleep well, and give yourself some downtime to recharge. You might also want to reassess your involvement in clubs and consider whether you can cut back on certain activities if they’re taking up too much of your time.",
+    "If you’re finding it tough to balance both, it could be helpful to talk with an academic advisor or a mentor. They might help you come up with strategies to better manage your time, or even suggest some ways to prioritize your workload. It’s important to remember that it’s okay to say no to certain commitments if they are interfering with your academic goals or well-being."
+  ]);
+}
+// Fragile
+else if (
+  lowerCaseMessage.includes("fragile") || 
+  lowerCaseMessage.includes("delicate") || 
+  lowerCaseMessage.includes("break down") || 
+  lowerCaseMessage.includes("vulnerable")
+) {
+  return getRandomResponse([
+    "It’s okay to feel fragile sometimes—it’s a sign of how deeply you care. Take it one step at a time, and be gentle with yourself.",
+    "Feeling vulnerable is part of being human. Surround yourself with people who uplift and support you during tough times.",
+    "Fragility can be a strength; it shows your capacity to feel deeply. Take time to nurture yourself and rebuild at your own pace.",
+    "It’s okay to take a break and focus on yourself. You’re stronger than you realize, even if it doesn’t feel that way right now.",
+    "Remember, being fragile doesn’t mean you’re weak. It’s a momentary state, and with care, you’ll find your balance again."
+  ]);
+}
+  // Severe Crisis (e.g., thoughts of suicide)
+  else if (lowerCaseMessage.includes("feeling like dying") || lowerCaseMessage.includes("suicidal thoughts") || lowerCaseMessage.includes("end it all") || lowerCaseMessage.includes("I'm not willing to live") || lowerCaseMessage.includes("i need help") || lowerCaseMessage.includes("Depression") || lowerCaseMessage.includes("depression") || lowerCaseMessage.includes("depressed")) { 
+    return "I'm really sorry you're feeling this way. It's really important to reach out to a professional who can provide immediate support. Please contact a helpline or a mental health professional. Here are some numbers you can reach out to for support: \n\nNational Helpline: 1-800-273-TALK (1-800-273-8255)\n\nPlease talk to someone who can provide the support you need.";
+  }
+  // Career Decisions
+else if (
+  lowerCaseMessage.includes("career decisions") || 
+  lowerCaseMessage.includes("career path") || 
+  lowerCaseMessage.includes("choosing a career") || 
+  lowerCaseMessage.includes("career advice") || 
+  lowerCaseMessage.includes("uncertain about career")
+) {
+  return getRandomResponse([
+    "Choosing a career can feel overwhelming, especially when you're unsure about your options. It’s helpful to start by reflecting on your core values, passions, and skills. What activities make you feel most energized and engaged? What subjects or tasks have you enjoyed the most in the past? Think about your strengths and what you can contribute to the world. Start by researching fields that align with those aspects. And remember, career decisions don't have to be made overnight. Take time to explore your options before making any commitments.",
+    "It’s completely okay to feel uncertain about your career direction. Many people don’t settle on one path right away. Some career changes even happen later in life. One way to gain clarity is to conduct informational interviews with professionals in different industries. These conversations can provide insights into the realities of various fields and help you determine if they align with your values and goals. Another way is by taking internships or volunteering in areas of interest to gain hands-on experience.",
+    "Remember that career paths aren’t always linear, and it's normal to switch directions as you grow and learn more about yourself. If you’re uncertain, ask yourself: What excites me? What does success look like for me? And how do I want to contribute to society? Your career doesn’t have to be the same as others or follow a traditional path. Explore fields that align with your interests, and be open to unexpected opportunities. The important thing is that it’s a path that will make you feel fulfilled and proud.",
+    "To make a more informed decision, start by reflecting on your passions and strengths. Write down what you enjoy doing, whether it’s working with people, solving problems, being creative, or something else. Ask yourself what types of problems you want to help solve in the world. Do you care about social justice, healthcare, technology, or education? Understanding these factors can help you narrow down career options that feel purposeful and exciting. Also, consider taking career assessments or personality tests to gain more insights into professions that may be a good fit for you.",
+    "The pressure to make a perfect career decision is real, but it’s also important to remember that no career is set in stone. Many people start in one field and transition into another later in life. You don’t have to have it all figured out immediately, and you’re not alone in this journey. Focus on building skills and experience in areas that interest you. Over time, you’ll develop a clearer sense of what feels right for you. And always be open to learning and growing; flexibility can often lead to the most rewarding career opportunities."
+  ]);
+}
+// Hard-to-Understand Courses
+else if (
+  lowerCaseMessage.includes("hard course") || 
+  lowerCaseMessage.includes("difficult subject") || 
+  lowerCaseMessage.includes("struggling with course") || 
+  lowerCaseMessage.includes("can't understand this topic") || 
+  lowerCaseMessage.includes("confused by subject")
+) {
+  return getRandomResponse([
+    "It’s completely normal to find some courses challenging, and you're not alone in this. The key is persistence and finding the right strategies to approach tough topics. Consider breaking the material into smaller chunks and focusing on one section at a time. If you're struggling with concepts, try reaching out to your professor or teaching assistant for clarification. You can also study with classmates or use online resources like videos or forums to get a different perspective. Remember, understanding takes time and practice!",
+    "Hard courses can feel overwhelming, but the good news is that with the right approach, you can conquer them. Start by identifying the areas that are giving you the most trouble. Break them down into manageable parts and tackle them bit by bit. Make use of study groups or tutoring sessions if possible—sometimes explaining the material to someone else can help you understand it better. Online resources like Khan Academy or YouTube tutorials might also give you a clearer understanding of tough concepts. Keep a positive mindset, and don’t give up. You’ve got this!",
+    "When a course feels difficult, it’s easy to feel discouraged, but that’s part of the learning process. First, make sure you're actively engaging with the material. Take notes, highlight key concepts, and ask questions. If you're still finding it hard, seek help from classmates, tutors, or online platforms. Many people struggle with tough courses, and it's okay to ask for support. Keep pushing forward, and remember that it's okay to not understand everything immediately. The more effort you put in, the clearer things will become over time.",
+    "It can be frustrating when a course feels tough, but that frustration is often a sign that you're pushing your boundaries and growing. Focus on one section at a time, and don’t be afraid to seek help from different sources. Meet with your professor, join study groups, or search for alternate explanations online. Some students find visual or hands-on learning methods more effective for complex topics. You might also want to practice problems or examples regularly to reinforce what you’ve learned. Small, consistent efforts can make a big difference.",
+    "It’s okay to feel challenged by certain courses—they’re meant to stretch your abilities. Take a step back and approach the material systematically. Start by reviewing the basics and gradually build up your understanding. Use multiple learning resources like textbooks, online articles, videos, or practice exercises to get different explanations. You might also find it helpful to teach the concept to someone else or discuss it in a study group, as explaining things can help clarify your own understanding. Don’t hesitate to ask for help if needed, and remember: understanding takes time and effort."
+  ]);
+}
+// Physical Exhaustion
+else if (
+  lowerCaseMessage.includes("physical exhaustion") || 
+  lowerCaseMessage.includes("feeling exhausted") || 
+  lowerCaseMessage.includes("tired all the time") || 
+  lowerCaseMessage.includes("burned out") || 
+  lowerCaseMessage.includes("fatigue")
+) {
+  return getRandomResponse([
+    "Physical exhaustion can be overwhelming, especially when you're juggling multiple responsibilities. It's important to listen to your body and give yourself time to rest and recover. Try to prioritize getting enough sleep, as it plays a crucial role in replenishing your energy. Additionally, balance your workload and consider incorporating short breaks throughout your day to recharge. Hydration and nutrition also make a big difference in how your body feels. If you continue to feel drained, don't hesitate to reach out to a healthcare professional for further advice.",
+    "I hear you. Physical exhaustion is not something to ignore. Your body needs adequate rest to function at its best, so it's essential to sleep well, eat nourishing foods, and manage stress. If you’re feeling burnt out, try reducing your workload or delegating tasks where possible. Make sure to schedule time for activities that help you relax, whether it’s exercise, meditation, or just a walk outside. If exhaustion persists, it might be a good idea to speak with a doctor to rule out any underlying health issues.",
+    "Feeling physically exhausted can take a toll on your mental and emotional well-being. One way to fight fatigue is by managing your sleep schedule and aiming for 7-9 hours of rest each night. Regular physical activity, like light stretching or a walk, can help rejuvenate your energy. Eating nutritious meals and drinking enough water are essential too. If your exhaustion persists despite making these changes, you may want to check in with a healthcare provider to ensure there are no underlying conditions contributing to your tiredness.",
+    "It’s important to acknowledge when you're feeling physically drained—it’s your body’s way of telling you it needs some care. Start by prioritizing sleep, as poor sleep can worsen exhaustion. Take breaks during the day to recharge, and avoid pushing yourself too hard. Consider practicing stress-relief techniques such as deep breathing or mindfulness to help lower your overall stress levels. Don’t be afraid to reach out to a doctor or counselor if you continue to experience extreme fatigue. It’s important to listen to your body and get the support you need.",
+    "Physical exhaustion can feel like it’s taking over, but it's essential to give your body time to recover. Try creating a more balanced routine that includes regular breaks and some form of light exercise, like walking, to get your energy flowing. Focus on getting enough sleep and practicing good sleep hygiene, such as winding down before bed. Your body needs rest, so take a break when you need it. If exhaustion continues to be an issue, consider consulting with a healthcare provider to address any potential underlying causes."
+  ]);
+}
+  // Motivation & Encouragement
+  else if (lowerCaseMessage.includes("motivation") || lowerCaseMessage.includes("struggle") || lowerCaseMessage.includes("give up") || lowerCaseMessage.includes("down") || lowerCaseMessage.includes("feeling down")) {
+    return getRandomResponse([
+      "You've got this! Believe in yourself, step by step. Every small effort counts.",
+      "Every day is a new opportunity. Keep moving forward and take it one day at a time."
+    ]);
+  }
+  // Exercise & Physical Health
+  else if (lowerCaseMessage.includes("exercise") || lowerCaseMessage.includes("workout") || lowerCaseMessage.includes("physical health")) {
+    return getExerciseSuggestions();
+  } 
+  // Relaxation & Breathing
+  else if (lowerCaseMessage.includes("relax") || lowerCaseMessage.includes("calm down") || lowerCaseMessage.includes("breathe")) {
+    return getRandomResponse([
+      "Try this breathing exercise: Breathe in for 4 seconds, hold for 4 seconds, exhale for 4 seconds. Repeat 3-5 times. This can help calm your mind.",
+      "Here’s a simple relaxation exercise: Take a moment to close your eyes, inhale deeply, and slowly exhale. Do this 5 times to help calm your mind and relieve stress."
+    ]);
+  } 
+  // Time Management & Productivity
+  else if (lowerCaseMessage.includes("time management") || lowerCaseMessage.includes("schedule") || lowerCaseMessage.includes("study help")) {
+    return getRandomResponse([
+        "Time management is key! You can schedule your work in such way that it won't affect your regular School/College hours. Wake up atleast 2hr earlier than your School/College starting time, after freshup revise what you have studied yesterday it will help you remember the topic. In evening after reaching to home study atleast for 3hours, ensure in 3hr you will cover the topics which is discussed in the morning School/College. Staying organized can reduce stress and increase productivity."
+]);
+  } 
+  // Family Pressure
+  else if (lowerCaseMessage.includes("pressure from home") || lowerCaseMessage.includes("family expectations")) {
+    return getRandomResponse([
+        "Family expectations can be overwhelming at times. It's important to communicate how you feel with them, but remember, your happiness and well-being come first.",
+        "Dealing with family pressure is never easy. Have you tried talking to them about how you're feeling? Open communication can sometimes ease the burden.",
+        "It’s tough when family pressures you to meet certain expectations, but it’s important to stay true to your own path. Take time to reflect on your goals and talk with them calmly.",
+        "Remember, no matter how much family may push you, it's okay to follow your own dreams. They may not understand at first, but a respectful conversation can help them see your perspective.",
+        "Family pressures can make you feel stuck, but you deserve to pursue what makes you happy. Is there a way you can set clear boundaries or have an honest discussion with them?"
+    ]);
+  }
+  // Self-doubt
+else if (
+  lowerCaseMessage.includes("self-doubt") || 
+  lowerCaseMessage.includes("doubting myself") || 
+  lowerCaseMessage.includes("lack of confidence") || 
+  lowerCaseMessage.includes("not good enough") || 
+  lowerCaseMessage.includes("second-guessing myself")
+) {
+  return getRandomResponse([
+    "Self-doubt is something we all face, but it doesn't define who you are. Remember, you've overcome challenges before, and you have the strength to do it again.",
+    "When self-doubt creeps in, remind yourself of your accomplishments. You've made it this far—trust that you are capable of more than you think.",
+    "It's okay to question yourself, but don't let self-doubt stop you from moving forward. Believe in the progress you've made and the potential you have.",
+    "You are enough just as you are. Self-doubt is a feeling, not a fact. Focus on your strengths and the positive things you've achieved.",
+    "Everyone experiences self-doubt at some point. What matters is pushing through it and realizing that you're more capable than you give yourself credit for."
+  ]);
+}
+  // Mood Swings
+else if (
+  lowerCaseMessage.includes("mood swings") || 
+  lowerCaseMessage.includes("mood change") || 
+  lowerCaseMessage.includes("emotional rollercoaster") || 
+  lowerCaseMessage.includes("ups and downs") || 
+  lowerCaseMessage.includes("emotional fluctuations")
+) {
+  return getRandomResponse([
+    "Mood swings are normal, but they can be tough to manage. Take time to check in with yourself and identify any triggers.",
+    "It’s okay to have ups and downs. Mood swings don’t define you. Try practicing mindfulness or breathing exercises to help ground yourself during intense moments.",
+    "If you're feeling overwhelmed by mood swings, it may help to keep track of your emotions and see if there's a pattern or external factors affecting you.",
+    "Remember, it’s okay to experience fluctuating emotions. Be patient with yourself and try not to judge your feelings. You're allowed to have good and bad days.",
+    "Mood swings can be a sign of many things—stress, lack of sleep, or even hormonal changes. Identifying what causes them can help you manage them better."
+  ]);
+}
+  // Recovery
+else if (
+  lowerCaseMessage.includes("recovery") || 
+  lowerCaseMessage.includes("healing") || 
+  lowerCaseMessage.includes("getting better") || 
+  lowerCaseMessage.includes("moving on") || 
+  lowerCaseMessage.includes("bouncing back")
+) {
+  return getRandomResponse([
+    "Recovery is a journey, not a destination. Be kind to yourself and take it one day at a time. Healing will happen gradually.",
+    "It’s okay to take small steps towards recovery. Each step forward, no matter how small, is progress.",
+    "Healing can be challenging, but it’s also a sign of your strength. Allow yourself to rest, grow, and rebuild at your own pace.",
+    "Remember, recovery is not linear. There will be ups and downs, but each moment brings you closer to where you want to be.",
+    "Believe in your ability to heal. Every setback is a part of the recovery process. Keep taking small steps forward and trust the journey."
+  ]);
+}
+    // Self-Care
+    else if (
+      lowerCaseMessage.includes("self-care") || 
+      lowerCaseMessage.includes("take care of myself") || 
+      lowerCaseMessage.includes("looking after myself") || 
+      lowerCaseMessage.includes("care for myself")
+    ) {
+      return getRandomResponse([
+        "Self-care is so important! How about taking a moment to do something you love, like listening to music or reading a book?",
+        "Remember, self-care isn’t selfish. Taking time to rest and recharge helps you show up better for yourself and others.",
+        "Self-care can be small but meaningful. Have you tried journaling, meditating, or even enjoying a nice cup of tea?",
+        "Sometimes, the best self-care is simply saying 'no' to something that drains you and 'yes' to something that nourishes you.",
+        "Take a few minutes for yourself today—whether it’s a short walk, stretching, or just sitting quietly. Your mind and body will thank you.",
+        "Self-care can look different for everyone. What’s one small thing you can do today that makes you feel good?"
+      ]);
+    }
+      // Mindfulness
+  else if (
+    lowerCaseMessage.includes("mindfulness") || 
+    lowerCaseMessage.includes("being present") || 
+    lowerCaseMessage.includes("focus") || 
+    lowerCaseMessage.includes("stay in the moment")
+  ) {
+    return getRandomResponse([
+      "Mindfulness is about being present. Try this: Sit comfortably, focus on your breathing, and gently bring your attention back if your mind wanders.",
+      "Feeling overwhelmed? Take a moment to notice 5 things you see, 4 you can touch, 3 you hear, 2 you smell, and 1 you taste. This grounding exercise can help.",
+      "A simple mindfulness practice: Close your eyes, take a deep breath in, hold for 3 seconds, and exhale slowly. Repeat this 5 times to calm your mind.",
+      "Mindfulness is like a mini-reset. Have you tried focusing entirely on a small task, like sipping tea or feeling the texture of an object?",
+      "Sometimes mindfulness is just pausing and appreciating the present moment. Can you think of one thing you're grateful for right now?",
+      "Mindfulness takes practice, but even a few moments of deep breathing can help center your thoughts. Would you like to try a guided exercise?"
+    ]);
+  }
+  // Feeling Confident
+else if (
+  lowerCaseMessage.includes("feeling confident") || 
+  lowerCaseMessage.includes("confidence boost") || 
+  lowerCaseMessage.includes("self-assurance") || 
+  lowerCaseMessage.includes("believe in myself")
+) {
+  return getRandomResponse([
+    "Confidence comes from acknowledging your strengths and understanding your potential. Start by focusing on the things you do well, and celebrate your achievements, no matter how small. It’s also important to surround yourself with positive people who uplift and encourage you to be your best self.",
+    "Confidence isn’t something that happens overnight. It’s built through consistent self-belief, learning, and pushing through challenges. If you’re feeling unsure, remember that everyone starts somewhere. Take pride in your progress and keep challenging yourself to grow!",
+    "Sometimes, confidence comes from stepping outside your comfort zone. Try taking on new challenges, even small ones. Each success, no matter how big or small, will reinforce your belief in your abilities. And remember, mistakes are part of the learning process—don’t let them hold you back!",
+    "One way to boost confidence is through positive self-talk. Instead of focusing on negative thoughts, remind yourself of your accomplishments and strengths. You’ve come so far, and you have the potential to achieve even more. Speak kindly to yourself—it makes a big difference!",
+    "If you're feeling confident, remember to embrace it and share that positive energy with others! Confidence is contagious, and when you shine, others can be inspired by your belief in yourself. Keep building on that feeling, and it will help you continue to grow and face new challenges with optimism."
+  ]);
+}
+  //Resilience
+  else if (
+    lowerCaseMessage.includes("resilience") ||
+    lowerCaseMessage.includes("bounce back") ||
+    lowerCaseMessage.includes("handle challenges")
+  ) {
+    return getRandomResponse([
+      "Resilience is about bouncing back from tough times. Remember, every challenge you overcome makes you stronger for the next one.",
+      "Building resilience takes time. Start by focusing on what you can control, practicing gratitude, and seeking support when needed.",
+      "You are capable of overcoming challenges. Reflect on past moments of strength—how did you push through difficult times before?",
+      "Resilience doesn’t mean you won’t feel down; it means you keep going even when things are hard. Take one step at a time.",
+      "Think of resilience as a muscle—every time you face adversity and keep going, you’re strengthening it. Be kind to yourself through the process."
+    ]);
+  }
+  // Psychologist / Therapist
+else if (
+  lowerCaseMessage.includes("psychologist") ||
+  lowerCaseMessage.includes("therapist") ||
+  lowerCaseMessage.includes("mental health professional") ||
+  lowerCaseMessage.includes("counselor") ||
+  lowerCaseMessage.includes("mental support")
+) {
+  return getPsychologistContact();
+}
+// Default Response
+else {
+  return getRandomResponse([
+    "That’s interesting! Can you tell me more? I’m here to chat and help you work through it.",
+    "I’m here to chat—what’s on your mind? Let’s talk through any challenges you may be facing.",
+  ]);
+}
+// Function to provide Psychologist contact information
+function getPsychologistContact() {
+  return (
+    "Here are some helplines you can contact in India:\n\n" +
+    "1. **Blyss Mental Health** - Call: +91 9555 89 92 92\n" +
+    "2. **I Call** (Mental Health Support) - Call: 9152987821 (10 AM - 8 PM)\n" +
+    "3. **Samaritans Mumbai** - Call: 91-22-2772 6771 or 91-22-2772 6773\n" +
+    "4. **NIMHANS** (National Institute of Mental Health and Neurosciences) - Call: +91 80 4611 0007\n" +
+    "5. **YourDOST** (Online Counseling) - www.yourdost.com (Available 24/7)\n" +
+    "6. **Mental Health Support** (India Helpline) - 91-22-2772 6771\n" +
+    "7. **Therapists and helplines can provide the support you need. Reach out to:\n\n- **iCall**: 9152987821\n- **Mpower 1on1**: 1800-120-820050 (Mental health support in India)\n- **AASRA**: 91-9820466726 (24/7 helpline)" +
+    "\nRemember, reaching out for help is a courageous step. You don't have to go through it alone. These professionals are available to provide support."
+  );
+}
+}
+
+function getRandomResponse(responses) {
+  return responses[Math.floor(Math.random() * responses.length)];
+}
+
+// Function to suggest exercises
+function getExerciseSuggestions() {
+  return getRandomResponse([
+    "Here are some quick exercises you can try: \n- Take a brisk 10-minute walk to refresh your mind. \n- Try a 5-minute stretch routine to release tension. \n- Do some jumping jacks for 2 minutes to get your blood flowing and boost your mood.",
+    "Physical activity can boost your mood! Try these exercises: \n- 10 pushups to get your blood circulating. \n- 15 squats to release energy. \n- A 2-minute plank hold to strengthen your core."
+  ]);
+}
